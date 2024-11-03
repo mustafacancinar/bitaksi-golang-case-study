@@ -52,7 +52,11 @@ func (r *DriverLocationRepository) SearchLocation(ctx context.Context, longitude
 				{Key: "distanceField", Value: "distance"},
 				{Key: "spherical", Value: true},
 				{Key: "maxDistance", Value: float64(radius) * 1000},
+				{Key: "distanceMultiplier", Value: 0.001},
 			}},
+		},
+		{
+			{Key: "$limit", Value: 1},
 		},
 	}
 
