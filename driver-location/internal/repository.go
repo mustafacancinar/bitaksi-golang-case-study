@@ -1,16 +1,18 @@
 package internal
 
 import (
-	"fmt"
 	"context"
-	"go.mongodb.org/mongo-driver/v2/mongo"
+	"fmt"
+
+	"github.com/cinarizasyon/bitaksi-golang-case-study/driver-location/internal/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type Repository interface {
-	CreateDriverLocation(ctx context.Context, location *DriverLocation) error
-	BulkCreateDriverLocations(ctx context.Context, locations []*DriverLocation) error
-	SearchLocation(ctx context.Context, longitude, latitude float64, radius int) ([]DriverLocation, error)
+	CreateDriverLocation(ctx context.Context, location *models.DriverLocation) error
+	BulkCreateDriverLocations(ctx context.Context, locations []*models.DriverLocation) error
+	SearchLocation(ctx context.Context, longitude, latitude float64, radius int) ([]models.DriverLocation, error)
 }
 
 type DriverLocationRepository struct {
@@ -21,7 +23,7 @@ func NewDriverLocationRepository(db *mongo.Database, collectionName string) *Dri
 	return &DriverLocationRepository{collection: db.Collection(collectionName)}
 }
 
-func (r *DriverLocationRepository) CreateDriverLocation(ctx context.Context, location *DriverLocation) error {
+func (r *DriverLocationRepository) CreateDriverLocation(ctx context.Context, location *models.DriverLocation) error {
 	_, err := r.collection.InsertOne(ctx, location)
 	if err != nil {
 		return fmt.Errorf("failed to insert driver location: %w", err)
@@ -30,7 +32,7 @@ func (r *DriverLocationRepository) CreateDriverLocation(ctx context.Context, loc
 	return nil
 }
 
-func (r *DriverLocationRepository) BulkCreateDriverLocations(ctx context.Context, locations []*DriverLocation) error {		
+func (r *DriverLocationRepository) BulkCreateDriverLocations(ctx context.Context, locations []*models.DriverLocation) error {		
 	_, err := r.collection.InsertMany(ctx, locations)
 	if err != nil {
 		return fmt.Errorf("failed to insert driver locations: %w", err)
@@ -39,7 +41,7 @@ func (r *DriverLocationRepository) BulkCreateDriverLocations(ctx context.Context
 	return nil
 }
 
-func (r *DriverLocationRepository) SearchLocation(ctx context.Context, longitude, latitude float64, radius int) ([]DriverLocation, error) {
+func (r *DriverLocationRepository) SearchLocation(ctx context.Context, longitude, latitude float64, radius int) ([]models.DriverLocation, error) {
 	filter := bson.M{
 		"location": bson.M{
 			"$geoWithin": bson.M{
@@ -54,7 +56,7 @@ func (r *DriverLocationRepository) SearchLocation(ctx context.Context, longitude
 	}
 	defer cursor.Close(ctx)
 
-	var locations []DriverLocation
+	var locations []models.DriverLocation
 	if err := cursor.All(ctx, &locations); err != nil {
 		return nil, fmt.Errorf("failed to decode driver locations: %w", err)
 	}
