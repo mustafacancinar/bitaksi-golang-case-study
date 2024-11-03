@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/v2/mongo"
-	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/mongo/options"
-	"go.mongodb.org/mongo-driver/v2/mongo/readpref"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func InitDatabase() error {
@@ -72,12 +72,15 @@ func OpenConnection() (*mongo.Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	mongoClient, err := mongo.Connect(options.Client().ApplyURI("mongodb://localhost:27017"))
+	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create client: %w", err)
 	}
+
+	ctxPing, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	
-	if err := mongoClient.Ping(ctx, readpref.Primary()); err != nil {
+	if err := mongoClient.Ping(ctxPing, readpref.Primary()); err != nil {
 		return nil, fmt.Errorf("failed to ping server: %w", err)
 	}
 

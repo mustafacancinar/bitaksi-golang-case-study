@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/cinarizasyon/bitaksi-golang-case-study/driver-location/internal/models"
-	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository interface {
@@ -33,7 +33,12 @@ func (r *DriverLocationRepository) CreateDriverLocation(ctx context.Context, loc
 }
 
 func (r *DriverLocationRepository) BulkCreateDriverLocations(ctx context.Context, locations []*models.DriverLocation) error {
-	_, err := r.collection.InsertMany(ctx, locations)
+	models := make([]mongo.WriteModel, len(locations))
+	for i, location := range locations {
+		models[i] = mongo.NewInsertOneModel().SetDocument(location)
+	}
+
+	_, err := r.collection.BulkWrite(ctx, models)
 	if err != nil {
 		return fmt.Errorf("failed to insert driver locations: %w", err)
 	}

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/cinarizasyon/bitaksi-golang-case-study/driver-location/internal/models"
-	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type LocationDriverService struct {
@@ -62,8 +62,8 @@ func (s *LocationDriverService) SearchLocation(req *models.SearchDriverLocationR
 		response[i] = models.DriverLocationSearchResponse{
 			Id: driver.Lookup("_id").ObjectID().Hex(),
 			Distance: driver.Lookup("distance").Double(),
-			Longitude: coordinates.Index(0).Double(),
-			Latitude: coordinates.Index(1).Double(),
+			Longitude: coordinates.Index(0).Value().Double(),
+			Latitude: coordinates.Index(1).Value().Double(),
 		}
 	}
 
