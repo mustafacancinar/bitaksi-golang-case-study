@@ -43,7 +43,7 @@ func (r *DriverLocationRepository) SearchLocation(ctx context.Context, longitude
 	filter := bson.M{
 		"location": bson.M{
 			"$geoWithin": bson.M{
-				"$centerSphere": []any{[]float64{longitude, latitude}, float64(radius) / 3963.2},
+				"$centerSphere": []any{[]float64{longitude, latitude}, float64(radius) / 6378.1}, // The equatorial radius of the Earth is approximately 3,963.2 miles or 6,378.1 kilometers.
 			},
 		},
 	}
