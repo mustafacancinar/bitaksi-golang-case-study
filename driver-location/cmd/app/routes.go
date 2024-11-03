@@ -10,5 +10,6 @@ func RegisterRoutes() *mux.Router {
 	router.HandleFunc("/drivers", CreateHandler).Methods("POST")
 	router.HandleFunc("/drivers/bulk", BulkCreateHandler).Methods("POST")
 	router.HandleFunc("/drivers/search", SearchHandler).Methods("POST")
+	router.HandleFunc("/drivers/upload", UploadHandler).Methods("POST")
 	return router
 }
