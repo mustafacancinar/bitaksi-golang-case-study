@@ -49,6 +49,23 @@ func (s *LocationDriverService) BulkCreateDriverLocations(req *models.BulkCreate
 	return s.repo.BulkCreateDriverLocations(context.TODO(), driver_locations)
 }
 
-func (s *LocationDriverService) SearchLocation(longitude, latitude float64, radius int) ([]models.DriverLocation, error) {
-	return s.repo.SearchLocation(context.TODO(), longitude, latitude, radius)
+func (s *LocationDriverService) SearchLocation(req *models.SearchDriverLocationRequest) ([]models.DriverLocationSearchResponse, error) {
+	searchResult, err := s.repo.SearchLocation(context.TODO(), req.Longitude, req.Latitude, int(req.Radius))
+	
+	if err != nil {
+		return nil, err
+	}
+
+	response := make([]models.DriverLocationSearchResponse, len(searchResult))
+	for i, driver := range searchResult {
+		coordinates := driver.Lookup("location").Document().Lookup("coordinates").Array()
+		response[i] = models.DriverLocationSearchResponse{
+			Id: driver.Lookup("_id").ObjectID().Hex(),
+			Distance: driver.Lookup("distance").Double(),
+			Longitude: coordinates.Index(0).Double(),
+			Latitude: coordinates.Index(1).Double(),
+		}
+	}
+
+	return response, nil
 }

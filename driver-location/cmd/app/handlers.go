@@ -71,7 +71,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		http.Error(w, "Invalid file", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("Invalid file: %s", err), http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
@@ -127,7 +127,32 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from search handler"))
+	defer r.Body.Close()
+	var request models.SearchDriverLocationRequest
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	if handleValidationError(w, request) != nil {
+		return
+	}
+
+	service := internal.NewLocationDriverService()
+	defer internal.CloseConnection(service.Client)
+
+	drivers, err := service.SearchLocation(&request)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(drivers)
 }
 
 func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
