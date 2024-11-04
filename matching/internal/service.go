@@ -3,7 +3,9 @@ package internal
 import (
 	"bytes"
 	"encoding/json"
+	"net"
 	"net/http"
+	"time"
 )
 
 type MatchingService struct {
@@ -41,6 +43,31 @@ func (s *MatchingService) Match(request *MatchingRequest) (*MatchingResponse, er
 
 	return &matchingResponse[0], nil
 }
+
+func (s *MatchingService) CheckRemoteServiceHealth() (bool, error) {
+	url := s.DriverLocationServiceBaseUrl + "/healthz"
+	client:= &http.Client{
+		Timeout: 5 * time.Second,
+	}
+	
+	response, err := client.Get(url)
+	if err != nil {
+		netErr, ok := err.(net.Error)
+		if ok && netErr.Timeout() {
+			return false, nil
+		}
+		return false, err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+
 
 
 

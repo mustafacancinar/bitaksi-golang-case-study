@@ -23,7 +23,16 @@ func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+
 	service := internal.NewMatchingService("http://localhost:8080")
+	
+	// TODO: refactor this logic with a gorutine that checks the health of the remote service
+	if isHealthy, _:= service.CheckRemoteServiceHealth(); !isHealthy{
+		// TODO: log error
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
 	response, err := service.Match(&request)
 
 	if err != nil {
