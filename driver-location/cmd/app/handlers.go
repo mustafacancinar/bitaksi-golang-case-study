@@ -13,6 +13,15 @@ import (
 	"github.com/cinarizasyon/bitaksi-golang-case-study/driver-location/internal/models"
 )
 
+// @Summary Create a driver location
+// @Description Create a driver location
+// @Tags drivers
+// @Accept json
+// @Produce json
+// @Success 201 {string} string "Driver location created"
+// @Failure 400 {string} string "Invalid JSON"
+// @Failure 500 {string} string "Internal server error"
+// @Router /drivers [post]
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request models.CreateDriverLocationRequest
@@ -39,6 +48,16 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// @Summary Bulk create driver locations
+// @Description Bulk create driver locations
+// @Tags drivers
+// @Accept json
+// @Produce json
+// @Success 201 {string} string "Driver locations created"
+// @Failure 400 {string} string "Invalid JSON"
+// @Failure 500 {string} string "Internal server error"
+// @Param locations body models.BulkCreateDriverLocationRequest true "Locations"
+// @Router /drivers/bulk [post]
 func BulkCreateHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request models.BulkCreateDriverLocationRequest
@@ -66,6 +85,15 @@ func BulkCreateHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// @Summary Upload a CSV file to bulk create driver locations
+// @Description Upload a CSV file to bulk create driver locations
+// @Tags drivers
+// @Accept multipart/form-data
+// @Produce json
+// @Success 201 {string} string "Driver locations created"
+// @Failure 400 {string} string "Invalid file"
+// @Failure 500 {string} string "Internal server error"
+// @Router /drivers/upload [post]
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -126,6 +154,18 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// @Summary Search driver locations
+// @Description Search driver locations
+// @Tags drivers
+// @Accept json
+// @Produce json
+// @Param longitude query number true "Longitude"
+// @Param latitude query number true "Latitude"
+// @Param radius query number true "Radius"
+// @Success 200 {array} models.DriverLocation "Driver locations"
+// @Failure 400 {string} string "Invalid JSON"
+// @Failure 500 {string} string "Internal server error"
+// @Router /drivers/search [post]
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request models.SearchDriverLocationRequest
@@ -155,6 +195,12 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(drivers)
 }
 
+// @Summary Health check
+// @Description Health check
+// @Tags health
+// @Success 200 {string} string "OK"
+// @Failure 503 {string} string "Service unavailable"
+// @Router /healthz [get]
 func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	dbClient, err := internal.OpenConnection()
 	if err != nil {
