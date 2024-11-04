@@ -1,0 +1,87 @@
+definitions:
+  internal.MatchingRequest:
+    properties:
+      latitude:
+        maximum: 90
+        minimum: -90
+        type: number
+      longitude:
+        maximum: 180
+        minimum: -180
+        type: number
+      radius:
+        minimum: 0
+        type: number
+    required:
+    - latitude
+    - longitude
+    - radius
+    type: object
+  internal.MatchingResponse:
+    properties:
+      distance:
+        type: number
+      id:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /matching:
+    post:
+      consumes:
+      - application/json
+      description: Match a driver with a passenger
+      parameters:
+      - description: Matching request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal.MatchingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal.MatchingResponse'
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+        "404":
+          description: No driver found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Matching
+      tags:
+      - matching
+  /token:
+    post:
+      description: Generate a JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Generate token
+      tags:
+      - token
+swagger: "2.0"

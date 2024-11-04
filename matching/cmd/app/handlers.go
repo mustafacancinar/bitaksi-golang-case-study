@@ -9,6 +9,17 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// @Summary Matching
+// @Description Match a driver with a passenger
+// @Tags matching
+// @Accept json
+// @Produce json
+// @Param request body internal.MatchingRequest true "Matching request"
+// @Success 200 {object} internal.MatchingResponse
+// @Failure 400 {string} string "Invalid JSON"
+// @Failure 404 {string} string "No driver found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /matching [post]
 func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -51,6 +62,13 @@ func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// @Summary Generate token
+// @Description Generate a JWT token
+// @Tags token
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Failure 500 {string} string "Internal server error"
+// @Router /token [post]
 func GenerateTokenHandler(w http.ResponseWriter, r *http.Request) {
 	token, err := internal.GenerateJWT()
 	if err != nil {
