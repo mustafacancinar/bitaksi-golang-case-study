@@ -3,10 +3,11 @@ package internal
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
@@ -18,7 +19,7 @@ func InitDatabase() error {
 	}
 	defer CloseConnection(client)
 
-	database := client.Database("bitaksi")
+	database := client.Database(os.Getenv("DB_NAME"))
 
 	validation := bson.M{
 		"$jsonSchema": bson.M{
@@ -49,12 +50,12 @@ func InitDatabase() error {
 	}
 	opts := options.CreateCollection().SetValidator(validation)
 
-	err = database.CreateCollection(context.Background(), "locations", opts)
+	err = database.CreateCollection(context.Background(), os.Getenv("COLLECTION_NAME"), opts)
 	if err != nil {
 		return fmt.Errorf("failed to create collection: %w", err)
 	}
 
-	collection  := database.Collection("locations")
+	collection  := database.Collection(os.Getenv("COLLECTION_NAME"))
 	_, err = collection.Indexes().CreateOne(
 		context.Background(), 
 		mongo.IndexModel{
@@ -72,7 +73,7 @@ func OpenConnection() (*mongo.Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("DB_URI")))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create client: %w", err)
 	}

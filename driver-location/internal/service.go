@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"os"
 
 	"github.com/cinarizasyon/bitaksi-golang-case-study/driver-location/internal/models"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,7 +19,7 @@ func NewLocationDriverService() *LocationDriverService {
 		panic(err)
 	}
 	
-	repository := NewDriverLocationRepository(client.Database("bitaksi"), "locations")
+	repository := NewDriverLocationRepository(client.Database(os.Getenv("DB_NAME")), os.Getenv("COLLECTION_NAME"))
 	return &LocationDriverService{
 		repo: repository,
 		Client: client,
