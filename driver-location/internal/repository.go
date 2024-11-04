@@ -73,7 +73,6 @@ func (r *DriverLocationRepository) SearchLocation(ctx context.Context, longitude
 
 	var locations []bson.Raw
 	for cursor.Next(ctx) {
-		fmt.Println("hello")
 		var location bson.Raw
 
 		if err := cursor.Decode(&location); err != nil {
