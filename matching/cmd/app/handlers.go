@@ -50,6 +50,18 @@ func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func GenerateTokenHandler(w http.ResponseWriter, r *http.Request) {
+	token, err := internal.GenerateJWT()
+	if err != nil {
+		http.Error(w, "Something went wrong. Please try again later.", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"token": token})
+}
+
 func handleValidationError(w http.ResponseWriter, req any) error {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	err := validate.Struct(req)
