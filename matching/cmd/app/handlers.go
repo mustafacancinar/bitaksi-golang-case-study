@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/cinarizasyon/bitaksi-golang-case-study/matching/internal"
 	"github.com/go-playground/validator/v10"
@@ -24,7 +25,7 @@ func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	service := internal.NewMatchingService("http://localhost:8080")
+	service := internal.NewMatchingService(os.Getenv("DRIVER_LOCATION_SERVICE_URL"))
 	
 	// TODO: refactor this logic with a gorutine that checks the health of the remote service
 	if isHealthy, _:= service.CheckRemoteServiceHealth(); !isHealthy{
