@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  mongo:
+    image: mongo:8.0-noble
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - mongo
+  
+  driver-location:
+    build:
+      context: ./driver-location
+      dockerfile: Dockerfile
+    container_name: driver-location
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - mongo
+    env_file:
+      - ./driver-location/.env
+  
+  matching:
+    build:
+      context: ./matching
+      dockerfile: Dockerfile
+    container_name: matching
+    networks:
+      - mongo
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./matching/.env
+  
+volumes:
+  data:
+
+networks:
+  mongo:
+    driver: bridge
