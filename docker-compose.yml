@@ -15,6 +15,7 @@ services:
     build:
       context: ./driver-location
       dockerfile: Dockerfile
+      target: final
     container_name: driver-location
     ports:
       - "8080:8080"
@@ -29,6 +30,7 @@ services:
     build:
       context: ./matching
       dockerfile: Dockerfile
+      target: final
     container_name: matching
     networks:
       - mongo
