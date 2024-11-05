@@ -10,7 +10,7 @@ import (
 
 func RegisterRoutes() *mux.Router {
 	router := mux.NewRouter()
-	router.Handle("/healthz", JWTMiddleware(http.HandlerFunc(HealthCheckHandler))).Methods("GET")
+	router.HandleFunc("/healthz", HealthCheckHandler).Methods("GET")
 	router.Handle("/drivers", JWTMiddleware(http.HandlerFunc(CreateHandler))).Methods("POST")
 	router.Handle("/drivers/bulk", JWTMiddleware(http.HandlerFunc(BulkCreateHandler))).Methods("POST")
 	router.Handle("/drivers/search", JWTMiddleware(http.HandlerFunc(SearchHandler))).Methods("POST")
