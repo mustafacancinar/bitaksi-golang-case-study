@@ -53,6 +53,7 @@ PORT=8080
 DB_NAME=bitaksi
 DB_URI=mongodb://mongo:27017
 COLLECTION_NAME=locations
+JWT_SECRET=secret
 ```
 
 **Matching Service**
