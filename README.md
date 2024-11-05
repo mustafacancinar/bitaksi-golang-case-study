@@ -13,6 +13,7 @@ This service is responsible for storing and retrieving driver locations. It prov
   - `POST /drivers/upload`: Stores the locations of multiple drivers using a CSV file.
   - `POST /drivers/search`: Searches for the nearest driver to a given location within a given radius.
   - `GET /healthz`: Retrieves the health status of the service.
+  - `GET /swagger/index.html`: Retrieves the Swagger UI documentation of the service.
   
   You can find the more detailed documentation of the service in Swagger UI.
 
@@ -21,6 +22,7 @@ This service is responsible for storing and retrieving driver locations. It prov
 This service is responsible for matching passengers with drivers. It provides the following endpoints:
 - `POST /match`: Matches a passenger with the nearest driver.
 - `POST /token`: Generates a JWT token for the `{authenticated: true}` claim.
+- `GET /swagger/index.html`: Retrieves the Swagger UI documentation of the service.
 
   You can find the more detailed documentation of the service in Swagger UI.
 

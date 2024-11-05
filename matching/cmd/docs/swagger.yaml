@@ -30,6 +30,9 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a sample API.
+  title: Matching API
+  version: "1.0"
 paths:
   /matching:
     post:
@@ -62,6 +65,8 @@ paths:
           description: Internal server error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Matching
       tags:
       - matching
@@ -84,4 +89,9 @@ paths:
       summary: Generate token
       tags:
       - token
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

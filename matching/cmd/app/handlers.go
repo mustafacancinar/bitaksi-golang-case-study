@@ -20,6 +20,7 @@ import (
 // @Failure 404 {string} string "No driver found"
 // @Failure 500 {string} string "Internal server error"
 // @Router /matching [post]
+// @Security ApiKeyAuth
 func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 

@@ -1,11 +1,19 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a sample API.",
+        "title": "Matching API",
+        "contact": {},
+        "version": "1.0"
     },
     "paths": {
         "/matching": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Match a driver with a passenger",
                 "consumes": [
                     "application/json"
@@ -127,6 +135,13 @@
                     "type": "number"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

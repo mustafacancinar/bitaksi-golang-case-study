@@ -21,6 +21,7 @@ import (
 // @Success 201 {string} string "Driver location created"
 // @Failure 400 {string} string "Invalid JSON"
 // @Failure 500 {string} string "Internal server error"
+// @Param location body models.CreateDriverLocationRequest true "Location"
 // @Router /drivers [post]
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()

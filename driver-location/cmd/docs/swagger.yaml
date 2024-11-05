@@ -45,6 +45,13 @@ paths:
       consumes:
       - application/json
       description: Create a driver location
+      parameters:
+      - description: Location
+        in: body
+        name: location
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateDriverLocationRequest'
       produces:
       - application/json
       responses:

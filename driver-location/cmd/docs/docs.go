@@ -28,6 +28,17 @@ const docTemplate = `{
                     "drivers"
                 ],
                 "summary": "Create a driver location",
+                "parameters": [
+                    {
+                        "description": "Location",
+                        "name": "location",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateDriverLocationRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Driver location created",
