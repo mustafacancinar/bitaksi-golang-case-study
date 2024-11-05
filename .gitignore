@@ -10,3 +10,6 @@ build/
 
 # Docker volumes
 data/
+
+# macOS
+.DS_Store
