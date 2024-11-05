@@ -37,8 +37,29 @@ definitions:
       type:
         type: string
     type: object
+  models.SearchDriverLocationRequest:
+    properties:
+      latitude:
+        maximum: 90
+        minimum: -90
+        type: number
+      longitude:
+        maximum: 180
+        minimum: -180
+        type: number
+      radius:
+        minimum: 0
+        type: number
+    required:
+    - latitude
+    - longitude
+    - radius
+    type: object
 info:
   contact: {}
+  description: This is a sample API.
+  title: Driver Location API
+  version: "1.0"
 paths:
   /drivers:
     post:
@@ -67,6 +88,8 @@ paths:
           description: Internal server error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Create a driver location
       tags:
       - drivers
@@ -97,6 +120,8 @@ paths:
           description: Internal server error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Bulk create driver locations
       tags:
       - drivers
@@ -106,21 +131,12 @@ paths:
       - application/json
       description: Search driver locations
       parameters:
-      - description: Longitude
-        in: query
-        name: longitude
+      - description: Search request
+        in: body
+        name: request
         required: true
-        type: number
-      - description: Latitude
-        in: query
-        name: latitude
-        required: true
-        type: number
-      - description: Radius
-        in: query
-        name: radius
-        required: true
-        type: number
+        schema:
+          $ref: '#/definitions/models.SearchDriverLocationRequest'
       produces:
       - application/json
       responses:
@@ -138,6 +154,8 @@ paths:
           description: Internal server error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Search driver locations
       tags:
       - drivers
@@ -161,6 +179,8 @@ paths:
           description: Internal server error
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: Upload a CSV file to bulk create driver locations
       tags:
       - drivers
@@ -179,4 +199,9 @@ paths:
       summary: Health check
       tags:
       - health
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

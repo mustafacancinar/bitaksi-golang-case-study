@@ -46,6 +46,7 @@ func MatchingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	request.Token = r.Header.Get("Authorization")
 	response, err := service.Match(&request)
 
 	if err != nil {

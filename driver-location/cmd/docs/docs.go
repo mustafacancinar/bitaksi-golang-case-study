@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/drivers": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Create a driver location",
                 "consumes": [
                     "application/json"
@@ -63,6 +68,11 @@ const docTemplate = `{
         },
         "/drivers/bulk": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Bulk create driver locations",
                 "consumes": [
                     "application/json"
@@ -109,6 +119,11 @@ const docTemplate = `{
         },
         "/drivers/search": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Search driver locations",
                 "consumes": [
                     "application/json"
@@ -122,25 +137,13 @@ const docTemplate = `{
                 "summary": "Search driver locations",
                 "parameters": [
                     {
-                        "type": "number",
-                        "description": "Longitude",
-                        "name": "longitude",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Latitude",
-                        "name": "latitude",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Radius",
-                        "name": "radius",
-                        "in": "query",
-                        "required": true
+                        "description": "Search request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SearchDriverLocationRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -170,6 +173,11 @@ const docTemplate = `{
         },
         "/drivers/upload": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Upload a CSV file to bulk create driver locations",
                 "consumes": [
                     "multipart/form-data"
@@ -283,18 +291,49 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "models.SearchDriverLocationRequest": {
+            "type": "object",
+            "required": [
+                "latitude",
+                "longitude",
+                "radius"
+            ],
+            "properties": {
+                "latitude": {
+                    "type": "number",
+                    "maximum": 90,
+                    "minimum": -90
+                },
+                "longitude": {
+                    "type": "number",
+                    "maximum": 180,
+                    "minimum": -180
+                },
+                "radius": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Driver Location API",
+	Description:      "This is a sample API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

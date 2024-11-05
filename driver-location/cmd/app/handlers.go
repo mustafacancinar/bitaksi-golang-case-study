@@ -23,6 +23,7 @@ import (
 // @Failure 500 {string} string "Internal server error"
 // @Param location body models.CreateDriverLocationRequest true "Location"
 // @Router /drivers [post]
+// @Security ApiKeyAuth
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request models.CreateDriverLocationRequest
@@ -59,6 +60,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {string} string "Internal server error"
 // @Param locations body models.BulkCreateDriverLocationRequest true "Locations"
 // @Router /drivers/bulk [post]
+// @Security ApiKeyAuth
 func BulkCreateHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request models.BulkCreateDriverLocationRequest
@@ -95,6 +97,7 @@ func BulkCreateHandler(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {string} string "Invalid file"
 // @Failure 500 {string} string "Internal server error"
 // @Router /drivers/upload [post]
+// @Security ApiKeyAuth
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -160,19 +163,19 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 // @Tags drivers
 // @Accept json
 // @Produce json
-// @Param longitude query number true "Longitude"
-// @Param latitude query number true "Latitude"
-// @Param radius query number true "Radius"
+// @Param request body models.SearchDriverLocationRequest true "Search request"
 // @Success 200 {array} models.DriverLocation "Driver locations"
 // @Failure 400 {string} string "Invalid JSON"
 // @Failure 500 {string} string "Internal server error"
 // @Router /drivers/search [post]
+// @Security ApiKeyAuth
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request models.SearchDriverLocationRequest
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
+		fmt.Printf("Error: %s", err)
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}

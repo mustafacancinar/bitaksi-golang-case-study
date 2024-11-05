@@ -25,11 +25,25 @@ func (s *MatchingService) Match(request *MatchingRequest) (*MatchingResponse, er
 	}
 
 	url := s.DriverLocationServiceBaseUrl + "/drivers/search"
-	response, err := http.Post(url, "application/json", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", request.Token)
+
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+	}
+	response, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, nil
+	}
 
 	var matchingResponse []MatchingResponse
 	err = json.NewDecoder(response.Body).Decode(&matchingResponse)

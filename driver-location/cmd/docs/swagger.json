@@ -1,11 +1,19 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a sample API.",
+        "title": "Driver Location API",
+        "contact": {},
+        "version": "1.0"
     },
     "paths": {
         "/drivers": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Create a driver location",
                 "consumes": [
                     "application/json"
@@ -52,6 +60,11 @@
         },
         "/drivers/bulk": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Bulk create driver locations",
                 "consumes": [
                     "application/json"
@@ -98,6 +111,11 @@
         },
         "/drivers/search": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Search driver locations",
                 "consumes": [
                     "application/json"
@@ -111,25 +129,13 @@
                 "summary": "Search driver locations",
                 "parameters": [
                     {
-                        "type": "number",
-                        "description": "Longitude",
-                        "name": "longitude",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Latitude",
-                        "name": "latitude",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Radius",
-                        "name": "radius",
-                        "in": "query",
-                        "required": true
+                        "description": "Search request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SearchDriverLocationRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -159,6 +165,11 @@
         },
         "/drivers/upload": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Upload a CSV file to bulk create driver locations",
                 "consumes": [
                     "multipart/form-data"
@@ -272,6 +283,37 @@
                     "type": "string"
                 }
             }
+        },
+        "models.SearchDriverLocationRequest": {
+            "type": "object",
+            "required": [
+                "latitude",
+                "longitude",
+                "radius"
+            ],
+            "properties": {
+                "latitude": {
+                    "type": "number",
+                    "maximum": 90,
+                    "minimum": -90
+                },
+                "longitude": {
+                    "type": "number",
+                    "maximum": 180,
+                    "minimum": -180
+                },
+                "radius": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }
